@@ -2,47 +2,49 @@ import { usePartialSection } from "deco/hooks/usePartialSection.ts";
 
 export interface Props {
   /**
-   * @format textarea
-   * @description The initial list of items.
-   * @default []
+   * @format rich-text
+   * @description The title of the list.
+   * @default "Item List"
    */
-  items?: string[];
+  title?: string;
 
   /**
    * @format textarea
-   * @description The new item to be added to the list.
-   * @default ""
+   * @description The initial list of items.
+   * @default ["Item 1", "Item 2", "Item 3"]
    */
-  newItem?: string;
+  items?: string[];
 }
 
-export default function Section({ items = [], newItem = "" }: Props) {
-  const addLink = usePartialSection({ props: { items } });
+export default function ItemList({ title = "Item List", items = ["Item 1", "Item 2", "Item 3"] }: Props) {
+  const deleteLink = (index: number) => usePartialSection({ props: { items: items.filter((_, i) => i !== index) } });
 
   return (
     <div class="container py-10 flex flex-col items-center justify-center gap-4">
-      <ul class="list-disc list-inside">
-        {items.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-      <div class="flex gap-2">
-        <input
-          type="text"
-          id="newItem"
-          class="input input-bordered"
-          value={newItem}
-        />
-        <button
-          hx-get={addLink["f-partial"]}
-          hx-target="#newItem"
-          hx-swap="afterend"
-          hx-include="[name='newItem']"
-          class="btn btn-outline"
-        >
-          Add item
-        </button>
-      </div>
+      <h2 class="text-2xl font-bold mb-4">{title}</h2>
+      <table class="table delete-row-example">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody hx-target="closest tr" hx-swap="outerHTML swap:1s">
+          {items.map((item, index) => (
+            <tr key={index}>
+              <td>{item}</td>
+              <td>
+                <button
+                  class="btn danger"
+                  hx-get={deleteLink(index)["f-partial"]}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

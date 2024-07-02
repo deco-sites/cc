@@ -724,9 +724,9 @@
     },
     {
       "id": "/.deco/blocks/Preview%20%2Fsections%2Flets.tsx.json",
-      "name": "lets.tsx",
+      "name": "Preview /sections/lets.tsx",
       "pinned": false,
-      "icon": "code",
+      "icon": "block",
       "layout": {
         "settings": {
           "hasHeaders": true,
